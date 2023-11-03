@@ -1,6 +1,6 @@
 # calculator-shin
 PyQt5 based calculator - Used for practice
-* based on
+* based on https://studyingrabbit.tistory.com/23
 
 * ## Goals
 
