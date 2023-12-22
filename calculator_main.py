@@ -66,73 +66,127 @@ class Main(QDialog):
         layout_buttons.addWidget(button_square, 1, 1)
         layout_buttons.addWidget(button_square_root, 1, 2)
 
-        ### =, clear, backspace 버튼 클릭 시 시그널 설정
-        button_equal.clicked.connect(self.button_equal_clicked)
-        button_clear.clicked.connect(self.button_clear_clicked)
+        # 버튼 클릭 시그널 설정
+        for i in range(10):
+            button_numbers[i].clicked.connect(lambda state, num=i: self.number_button_clicked(num))
+
+        button_dot.clicked.connect(lambda state, num=".": self.number_button_clicked(num))
+        button_plus_minus.clicked.connect(self.button_plus_minus_clicked)
+        button_clear_entry.clicked.connect(self.button_clear_entry_clicked)
+        button_clear_all.clicked.connect(self.button_clear_all_clicked)
         button_backspace.clicked.connect(self.button_backspace_clicked)
+        button_equal.clicked.connect(self.button_equal_clicked)
+        button_percent.clicked.connect(self.button_percent_clicked)
+        button_inverse.clicked.connect(self.button_inverse_clicked)
+        button_square.clicked.connect(self.button_square_clicked)
+        button_square_root.clicked.connect(self.button_square_root_clicked)
+        button_plus.clicked.connect(self.button_plus_clicked)
+        button_minus.clicked.connect(self.button_minus_clicked)
+        button_multi.clicked.connect(self.button_multi_clicked)
+        button_divi.clicked.connect(self.button_divi_clicked)
 
-        ### =, clear, backspace 버튼을 layout_clear_equal 레이아웃에 추가
-        layout_clear_equal.addWidget(button_clear)
-        layout_clear_equal.addWidget(button_backspace)
-        layout_clear_equal.addWidget(button_equal)
-
-        ### 숫자 버튼 생성하고, layout_number 레이아웃에 추가
-        ### 각 숫자 버튼을 클릭했을 때, 숫자가 수식창에 입력 될 수 있도록 시그널 설정
-        number_button_dict = {}
-        for number in range(0, 10):
-            number_button_dict[number] = QPushButton(str(number))
-            number_button_dict[number].clicked.connect(lambda state, num = number:
-                                                       self.number_button_clicked(num))
-            if number >0:
-                x,y = divmod(number-1, 3)
-                layout_number.addWidget(number_button_dict[number], x, y)
-            elif number==0:
-                layout_number.addWidget(number_button_dict[number], 3, 1)
-
-        ### 소숫점 버튼과 00 버튼을 입력하고 시그널 설정
-        button_dot = QPushButton(".")
-        button_dot.clicked.connect(lambda state, num = ".": self.number_button_clicked(num))
-        layout_number.addWidget(button_dot, 3, 2)
-
-        button_double_zero = QPushButton("00")
-        button_double_zero.clicked.connect(lambda state, num = "00": self.number_button_clicked(num))
-        layout_number.addWidget(button_double_zero, 3, 0)
-
-        ### 각 레이아웃을 main_layout 레이아웃에 추가
-        main_layout.addLayout(layout_equation_solution)
-        main_layout.addLayout(layout_operation)
-        main_layout.addLayout(layout_clear_equal)
-        main_layout.addLayout(layout_number)
+        # 수식창을 layout에 추가
+        main_layout.addWidget(self.equation)
+        # 버튼 레이아웃 추가
+        main_layout.addLayout(layout_buttons)
 
         self.setLayout(main_layout)
         self.show()
 
-    #################
-    ### functions ###
-    #################
+        #################
+        ### functions ###
+        #################
+
+    def button_plus_clicked(self):
+        equation = self.equation.text()
+        if equation and equation[-1].isdigit():
+            equation += ' + '
+        self.equation.setText(equation)
+
+    def button_minus_clicked(self):
+        equation = self.equation.text()
+        if equation and equation[-1].isdigit():
+            equation += ' - '
+        self.equation.setText(equation)
+
+    def button_multi_clicked(self):
+        equation = self.equation.text()
+        if equation and equation[-1].isdigit():
+            equation += ' * '
+        self.equation.setText(equation)
+
+    def button_divi_clicked(self):
+        equation = self.equation.text()
+        if equation and equation[-1].isdigit():
+            equation += ' / '
+        self.equation.setText(equation)
+
     def number_button_clicked(self, num):
         equation = self.equation.text()
         equation += str(num)
         self.equation.setText(equation)
 
-    def button_operation_clicked(self, operation):
+    def button_clear_entry_clicked(self):
         equation = self.equation.text()
-        equation += operation
+        if equation and equation[-1].isdigit():
+            equation = equation.rsplit(' ', 1)[0]
         self.equation.setText(equation)
 
-    def button_equal_clicked(self):
-        equation = self.equation.text()
-        solution = eval(equation)
-        self.solution.setText(str(solution))
-
-    def button_clear_clicked(self):
+    def button_clear_all_clicked(self):
         self.equation.setText("")
-        self.solution.setText("")
+
+    def button_plus_minus_clicked(self):
+        equation = self.equation.text()
+        if equation and equation[-1].isdigit():
+            # 현재 수식의 마지막 문자가 숫자일 때만 부호를 변경합니다.
+            if equation[0] == '-':
+                equation = equation[1:]
+            else:
+                equation = '-' + equation
+            self.equation.setText(equation)
 
     def button_backspace_clicked(self):
         equation = self.equation.text()
         equation = equation[:-1]
         self.equation.setText(equation)
+
+    def button_equal_clicked(self):
+        equation = self.equation.text()
+        try:
+            solution = eval(equation)
+            self.equation.setText(str(solution))
+        except Exception as e:
+            self.equation.setText("Error")
+
+    def button_percent_clicked(self):
+        equation = self.equation.text()
+        if equation and equation[-1].isdigit():
+            equation += ' % '
+        self.equation.setText(equation)
+
+    def button_inverse_clicked(self):
+        equation = self.equation.text()
+        try:
+            result = 1 / eval(equation)
+            self.equation.setText(str(result))
+        except Exception as e:
+            self.equation.setText("Error")
+
+    def button_square_clicked(self):
+        equation = self.equation.text()
+        try:
+            result = eval(equation) ** 2
+            self.equation.setText(str(result))
+        except Exception as e:
+            self.equation.setText("Error")
+
+    def button_square_root_clicked(self):
+        equation = self.equation.text()
+        try:
+            result = eval(equation) ** 0.5
+            self.equation.setText(str(result))
+        except Exception as e:
+            self.equation.setText("Error")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
