@@ -9,21 +9,12 @@ class Main(QDialog):
     def init_ui(self):
         main_layout = QVBoxLayout()
 
-        ### 각 위젯을 배치할 레이아웃을 미리 만들어 둠
-        layout_operation = QHBoxLayout()
-        layout_clear_equal = QHBoxLayout()
-        layout_number = QGridLayout()
-        layout_equation_solution = QFormLayout()
+        # 레이아웃 변경
+        layout_buttons = QGridLayout()
 
-        ### 수식 입력과 답 출력을 위한 LineEdit 위젯 생성
-        label_equation = QLabel("Equation: ")
-        label_solution = QLabel("Solution: ")
+        # 수식과 답을 위한 LineEdit 위젯 생성
         self.equation = QLineEdit("")
-        self.solution = QLineEdit("")
-
-        ### layout_equation_solution 레이아웃에 수식, 답 위젯을 추가
-        layout_equation_solution.addRow(label_equation, self.equation)
-        layout_equation_solution.addRow(label_solution, self.solution)
+        self.equation.setReadOnly(True)  # 읽기 전용으로 설정
 
         ### 사칙연상 버튼 생성
         button_plus = QPushButton("+")
