@@ -16,28 +16,55 @@ class Main(QDialog):
         self.equation = QLineEdit("")
         self.equation.setReadOnly(True)  # 읽기 전용으로 설정
 
-        ### 사칙연상 버튼 생성
+        # 버튼 생성
+        button_numbers = [QPushButton(str(i)) for i in range(10)]
+        button_dot = QPushButton(".")
+        button_plus_minus = QPushButton("+/-")
+        button_clear_entry = QPushButton("CE")
+        button_clear_all = QPushButton("C")
+        button_backspace = QPushButton("⌫")  # Backspace symbol
+        button_equal = QPushButton("=")
+        button_percent = QPushButton("%")
+        button_inverse = QPushButton("1/x")
+        button_square = QPushButton("x^2")
+        button_square_root = QPushButton("x^(1/2)")
         button_plus = QPushButton("+")
         button_minus = QPushButton("-")
-        button_product = QPushButton("x")
-        button_division = QPushButton("/")
+        button_multi = QPushButton("x")
+        button_divi = QPushButton("/")
 
-        ### 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
-        button_plus.clicked.connect(lambda state, operation = "+": self.button_operation_clicked(operation))
-        button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
-        button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))
-        button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
+        # 숫자 및 소수점 버튼의 위치 지정
+        for i in range(1, 10):
+            pass
 
-        ### 사칙연산 버튼을 layout_operation 레이아웃에 추가
-        layout_operation.addWidget(button_plus)
-        layout_operation.addWidget(button_minus)
-        layout_operation.addWidget(button_product)
-        layout_operation.addWidget(button_division)
+        layout_buttons.addWidget(button_numbers[7], 2, 0)
+        layout_buttons.addWidget(button_numbers[8], 2, 1)
+        layout_buttons.addWidget(button_numbers[9], 2, 2)
+        layout_buttons.addWidget(button_numbers[4], 3, 0)
+        layout_buttons.addWidget(button_numbers[5], 3, 1)
+        layout_buttons.addWidget(button_numbers[6], 3, 2)
+        layout_buttons.addWidget(button_numbers[1], 4, 0)
+        layout_buttons.addWidget(button_numbers[2], 4, 1)
+        layout_buttons.addWidget(button_numbers[3], 4, 2)
+        layout_buttons.addWidget(button_numbers[0], 5, 1)
+        layout_buttons.addWidget(button_dot, 5, 2)
+        layout_buttons.addWidget(button_plus_minus, 5, 0)
 
-        ### =, clear, backspace 버튼 생성
-        button_equal = QPushButton("=")
-        button_clear = QPushButton("Clear")
-        button_backspace = QPushButton("Backspace")
+        # 연산자 버튼 추가 및 위치 조정
+        layout_buttons.addWidget(button_plus, 4, 3)
+        layout_buttons.addWidget(button_minus, 3, 3)
+        layout_buttons.addWidget(button_multi, 2, 3)
+        layout_buttons.addWidget(button_divi, 1, 3)
+
+        # 나머지 버튼 추가
+        layout_buttons.addWidget(button_clear_entry, 0, 1)
+        layout_buttons.addWidget(button_backspace, 0, 3)
+        layout_buttons.addWidget(button_clear_all, 0, 2)
+        layout_buttons.addWidget(button_equal, 5, 3)  # rowspan=1, colspan=1
+        layout_buttons.addWidget(button_percent, 0, 0)
+        layout_buttons.addWidget(button_inverse, 1, 0)
+        layout_buttons.addWidget(button_square, 1, 1)
+        layout_buttons.addWidget(button_square_root, 1, 2)
 
         ### =, clear, backspace 버튼 클릭 시 시그널 설정
         button_equal.clicked.connect(self.button_equal_clicked)
